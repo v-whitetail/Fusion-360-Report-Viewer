@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
 from . import commands
 from .lib.config import logger
 from .lib.Buffer import Builder

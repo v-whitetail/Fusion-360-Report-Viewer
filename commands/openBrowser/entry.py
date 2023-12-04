@@ -1,6 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
-
 import os, webbrowser
 from ...lib import config
 from ...lib import fusion360utils as futil
@@ -29,7 +27,6 @@ IS_PROMOTED = True
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 
 local_handlers = []
-
 
 def start():
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)

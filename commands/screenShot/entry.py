@@ -26,7 +26,6 @@ ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resource
 COMMON_ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, 'commonResources', '')
 
 local_handlers = []
-
 def start():
     ui = get_ui()
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
@@ -86,9 +85,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
     face_plant_3(root_component)
     screenshot()
 
-
-
-
 def face_plant_3(root: adsk.fusion.Component):
     move_features = root.features.moveFeatures
     origin = adsk.core.Matrix3D.create()
@@ -98,9 +94,6 @@ def face_plant_3(root: adsk.fusion.Component):
     ]
     for pos in positions:
         pos.transform2 = origin
-
-
-
 
 def get_norms(root: adsk.fusion.Component):
     flat = adsk.core.SurfaceTypes.PlaneSurfaceType
@@ -132,10 +125,6 @@ def get_norms(root: adsk.fusion.Component):
         )
         for face, body in max_face_per_body
     )
-
-
-
-
 
 def command_preview(args: adsk.core.CommandEventArgs):
     inputs = args.command.commandInputs

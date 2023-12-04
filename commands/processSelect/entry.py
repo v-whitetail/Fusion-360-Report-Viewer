@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
 from ... import config
 from ...lib import fusion360utils as futil
 from ...lib.selection_filters import *
@@ -75,11 +74,6 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
                 True,
                 )
 
-
-
-
-    
-
 def command_execute(args: adsk.core.CommandEventArgs):
 
     futil.log(f'{CMD_NAME} Command Execute Event')
@@ -107,8 +101,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
     )
     for occurrence in occurrences:
         ui.activeSelections.add(occurrence)
-
-
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')

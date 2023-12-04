@@ -1,9 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
-
-#import re 
 import os
-#import shutil
 import threading
 import subprocess
 from . import config

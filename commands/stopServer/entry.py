@@ -1,6 +1,5 @@
 import adsk.core
 import os
-from ... import config
 from ...lib import live_server
 from ...lib import fusion360utils as futil
 
@@ -26,8 +25,6 @@ IS_PROMOTED = True
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 
 local_handlers = []
-
-
 def start():
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
     futil.add_handler(cmd_def.commandCreated, command_created)
@@ -42,7 +39,6 @@ def start():
 
     control = panel.controls.addCommand(cmd_def, CMD_BESIDE_ID, False)
     control.isPromoted = IS_PROMOTED
-
 
 def stop():
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
@@ -65,28 +61,20 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.add_handler(args.command.execute, command_execute, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
-
 def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
 
-
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
-    inputs = args.command.commandInputs
-
 
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
-    inputs = args.inputs
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
-
 
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
     futil.log(f'{CMD_NAME} Validate Input Event')
-        
 
 def command_destroy(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Destroy Event')
-
     global local_handlers
     local_handlers = []

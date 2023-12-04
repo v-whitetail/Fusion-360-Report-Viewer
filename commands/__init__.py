@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
 
 from .stopServer import entry as stopServer
 from .processAdd import entry as processAdd

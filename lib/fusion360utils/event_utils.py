@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
 
 #  Copyright 2022 by Autodesk, Inc.
 #  Permission to use, copy, modify, and distribute this software in object code form

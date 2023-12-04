@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
 
 import os
 import json

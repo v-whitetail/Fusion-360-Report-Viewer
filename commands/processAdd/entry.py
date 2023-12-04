@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
 from ... import config
 from ...lib import fusion360utils as futil
 from ...lib.selection_filters import *
@@ -58,11 +57,6 @@ def stop():
     if command_definition:
         command_definition.deleteMe()
 
-
-
-
-
-
 def command_created(args: adsk.core.CommandCreatedEventArgs):
 
     futil.log(f'{CMD_NAME} Command Created Event')
@@ -88,12 +82,6 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
                 f'{template}',
                 True,
                 )
-
-
-
-
-
-
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
@@ -122,11 +110,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
     for c in components:
         add_reports(c, selected_templates)
     
-
-
-
-
-
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
 

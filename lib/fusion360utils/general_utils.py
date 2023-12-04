@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
 
 #  Copyright 2022 by Autodesk, Inc.
 #  Permission to use, copy, modify, and distribute this software in object code form
@@ -12,7 +11,6 @@ import adsk.core, adsk.fusion, adsk.cam
 #  AUTODESK, INC. DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 #  UNINTERRUPTED OR ERROR FREE.
 
-import os
 import traceback
 
 app = adsk.core.Application.get()
