@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home Page</title>
+        <style>
+html {
+    background-size: cover;
+    background-color: rgba(40, 40, 60, 1.0);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: url('./resources/homepage-background-v1.svg');
+}
+body {
+    color: #ECE1D7;
+    margin: 20px;
+    font-family: sans-serif;
+}
+
+h1 { color: #C5B0C6; }
+
+.content-block {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+.link-block {
+    width: 30%;
+    margin: 32px;
+    padding: 32px;
+    min-width: 256px;
+    max-width: 1024px;
+    border-radius: 16px;
+    display: inline-block;
+    box-shadow: 10px 10px 30px 5px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.link-row {
+    color: #FFB894;
+    padding: 12px;
+    font-size: 18px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+.link-row:hover {
+    color: #FFB894;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #C5B0C640;
+}
+
+        </style>
+    </head>
+    <body>
+        <div id="content" class="content-block">
+            <div class="link-block">
+                <h1> Templates </h1>
+
+                <a class="link-row" href="templates/rdoc.html">tdoc</a>
+
+            </div>
+            <div class="link-block">
+                <h1> Reports </h1>
+
+                <a class="link-row" href="reports/tdoc.html">rdoc</a>
+
+            </div>
+        </div>
+    </body>
+</html>
+
