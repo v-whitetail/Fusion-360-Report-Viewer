@@ -30,7 +30,6 @@ PANEL_AFTER = f''
 IS_PROMOTED = False
 
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
-COMMON_ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, 'commonResources', '')
 
 local_handlers = []
 def start():
