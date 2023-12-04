@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
 from ... import config
 from ...lib import fusion360utils as futil
 from ...lib.selection_filters import *
@@ -27,7 +26,6 @@ COMMON_ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), os
 
 local_handlers = []
 def start():
-
     ui = get_ui()
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
     futil.add_handler(cmd_def.commandCreated, command_created)
@@ -43,7 +41,6 @@ def start():
         panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, PANEL_AFTER, False)
 
     control = panel.controls.addCommand(cmd_def, CMD_BESIDE_ID, False)
-
     control.isPromoted = IS_PROMOTED
 
 def stop():

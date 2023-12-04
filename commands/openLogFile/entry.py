@@ -1,8 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
-
 import os, subprocess
-from ... import config
 from ...lib import fusion360utils as futil
 from ...lib.config import logger
 
@@ -28,8 +25,6 @@ IS_PROMOTED = True
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 
 local_handlers = []
-
-
 def start():
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
     futil.add_handler(cmd_def.commandCreated, command_created)
@@ -44,7 +39,6 @@ def start():
 
     control = panel.controls.addCommand(cmd_def, CMD_BESIDE_ID, False)
     control.isPromoted = IS_PROMOTED
-
 
 def stop():
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
@@ -83,11 +77,9 @@ def command_input_changed(args: adsk.core.InputChangedEventArgs):
     inputs = args.inputs
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
 
-
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
     futil.log(f'{CMD_NAME} Validate Input Event')
         
-
 def command_destroy(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Destroy Event')
 

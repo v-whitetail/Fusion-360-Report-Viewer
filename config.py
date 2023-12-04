@@ -1,5 +1,3 @@
-import os
-
 DEBUG = True
 
 ADDIN_NAME = 'Report Viewer'

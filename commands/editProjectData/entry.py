@@ -1,9 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-#from .........................................home.v import adsk
-
-
-
-import os
 import json
 from ... import config
 from ...lib import fusion360utils as futil
@@ -35,37 +30,22 @@ COMMON_ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), os
 local_handlers = []
 
 def start():
-
     ui = get_ui()
-
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
-
     futil.add_handler(cmd_def.commandCreated, command_created)
-
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
-
     toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
-
 
     if toolbar_tab is None:
         toolbar_tab = workspace.toolbarTabs.add(TAB_ID, TAB_NAME)
 
     panel = toolbar_tab.toolbarPanels.itemById(PANEL_ID)
 
-
     if panel is None:
         panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, PANEL_AFTER, False)
 
-
     control = panel.controls.addCommand(cmd_def, CMD_BESIDE_ID, False)
-
     control.isPromoted = IS_PROMOTED
-
-
-
-
-
-
 
 def stop():
     ui = get_ui()
@@ -79,11 +59,6 @@ def stop():
 
     if command_definition:
         command_definition.deleteMe()
-
-
-
-
-
 
 def command_created(args: adsk.core.CommandCreatedEventArgs):
 
@@ -104,12 +79,6 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
                 2,
                 False,
                 )
-
-
-
-
-
-
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
@@ -133,26 +102,12 @@ def command_execute(args: adsk.core.CommandEventArgs):
         file.flush()
         file.write(json.dumps(project_data))
 
-
-
 def command_preview(args: adsk.core.CommandEventArgs):
-    inputs = args.command.commandInputs
     futil.log(f'{CMD_NAME} Command Preview Event')
-
-
-
-
-
 
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
-    inputs = args.inputs
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
-
-
-
-
-
 
 def command_destroy(args: adsk.core.CommandEventArgs):
     global local_handlers
