@@ -12,7 +12,7 @@ This is a very early work in progress. Please feel free to reach out! I'm not a 
 * Process Add: Add an attribute defined by custom report templates to components - This attribute will be exported along with the component definition
 * Process Remove: Remove an attritube defined by a custom report template
 * Process Select: Select all components with attributes defined by a custom report template
-* \[WIP & REFACTOR\] Screen Shot / Assiciate Image With Process: Produce a set of images associated with images - The image handle will be added as a component attribute to be exported along with the component definition
+* \[WIP & REFACTOR\] Screen Shot / Assiciate Image With Process: Produce a set of images associated with components - The image handle will be added as a component attribute to be exported along with the component definition
 * Start Server: Launch a TCP server to host your "Home Page" directory on a localhost port (default is 8000) to view live updates to documents
 * Stop Server: Stop the localhost server in case of a crash or to reduce overhead
 
@@ -26,3 +26,4 @@ This is a very early work in progress. Please feel free to reach out! I'm not a 
 * Compiled utilities are not intended to interface with the Fusion 360 API directly. This will be done with modularity and ease of use in mind. Each one is intended to be "fire and forget" (i.e. to be launched in a separate thread which will not return any information back into Fusion 360).
 * The goal of utility binaries is for the burden of general file system operations and interfacing with the browser to be taken away from Fusion 360. Currently, the scope of utilities is limited to hosting local files and editing HTML.
 * Most Importantly: ANY operations which may incur a significant runtime overhead in Fusion 360 should be focused on for optimization, able to be deactivated with a single command, offloaded to a utility, or factored out of the AddIn entirely.
+* This aims to feel like a proper extension to your Fusion 360 workflow. Adjustments to generated reports should happen and refresh in real time (per every save or at the execution of a command). I want to avoid the necessity to refresh the browser to view updated content. If you have the browser open on another monitor, it should feel like an extension of Fusion 360. 
