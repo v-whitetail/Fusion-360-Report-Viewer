@@ -1,6 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
-
 def get(design: adsk.fusion.Design):
     
     variables_in_buffer = [

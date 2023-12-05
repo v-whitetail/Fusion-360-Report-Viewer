@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-
 import json
 from . import UserParameters, PartData, ProjectData
 

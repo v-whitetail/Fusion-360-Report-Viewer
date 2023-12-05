@@ -9,10 +9,10 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 home_page = config.home_page
-home_folder = config.home_folder
+home_page_dir = config.home_page_dir
 
-reports = config.reports
-templates = config.templates
+reports = config.reports_dir
+templates = config.templates_dir
 
 local_user = config.local_user
 server_exe = config.server_exe
@@ -22,9 +22,9 @@ server_port = config.server_port
 
 global tcp_thread
 
-def run_exe(server_ip,server_port,home_folder):
+def run_exe(server_ip,server_port,home_page_dir):
     subprocess.Popen(
-        [server_exe, server_ip, server_port, home_folder],
+        [server_exe, server_ip, server_port, home_page_dir],
         creationflags=subprocess.CREATE_NO_WINDOW,
         )
 
@@ -38,8 +38,8 @@ def start():
 
 
     global tcp_thread
-    futil.log(format((server_ip,server_port,home_folder)))
-    tcp_thread = threading.Thread(target=run_exe, args=(server_ip,server_port,home_folder))
+    futil.log(format((server_ip,server_port,home_page_dir)))
+    tcp_thread = threading.Thread(target=run_exe, args=(server_ip,server_port,home_page_dir))
     tcp_thread.start()
 
 def stop():

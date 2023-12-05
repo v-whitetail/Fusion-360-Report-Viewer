@@ -2,7 +2,7 @@ import adsk.core, adsk.fusion, adsk.cam
 import json
 from ... import config
 from ...lib import fusion360utils as futil
-from ...lib.config import projectdata
+from ...lib.config import project_data_dir
 from ...lib.config import project_data_variables
 from ...lib.selection_filters import *
 
@@ -85,7 +85,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
     project_data_file_name = project_folder.name + '.json'
-    project_data_file = os.path.join(projectdata,project_data_file_name)
+    project_data_file = os.path.join(project_data_dir, project_data_file_name)
 
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
