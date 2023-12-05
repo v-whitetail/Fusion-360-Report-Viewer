@@ -1,7 +1,7 @@
 import adsk.core, adsk.fusion, adsk.cam
 import os, subprocess
 from ...lib import fusion360utils as futil
-from ...lib.config import home_folder
+from ...lib.config import home_page_dir
 
 app = adsk.core.Application.get()
 ui = app.userInterface
@@ -55,7 +55,7 @@ def stop():
 def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.log(f'{CMD_NAME} Command Created Event')
 
-    subprocess.run(['explorer',home_folder])
+    subprocess.run(['explorer',home_page_dir])
 
     futil.add_handler(args.command.execute, command_execute, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)

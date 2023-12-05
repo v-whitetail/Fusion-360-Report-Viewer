@@ -2,7 +2,7 @@ import adsk.core, adsk.fusion, adsk.cam
 
 import os
 import json
-from ..config import projectdata
+from ..config import project_data_dir
 
 def get( app: adsk.core.Application):
     
@@ -11,7 +11,7 @@ def get( app: adsk.core.Application):
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
     project_data_file_name = project_folder.name + '.json'
-    project_data_file = os.path.join(projectdata,project_data_file_name)
+    project_data_file = os.path.join(project_data_dir, project_data_file_name)
 
     variable_names = [
         "file",
@@ -35,7 +35,7 @@ def get( app: adsk.core.Application):
         buffer[name] = value
 
     try:
-        with open(os.path.abspath(project_data_file),'r') as file:
+        with open(os.path.abspath(project_data_file), 'r') as file:
             metadata = json.loads(file.read())
             buffer.update(metadata)
 

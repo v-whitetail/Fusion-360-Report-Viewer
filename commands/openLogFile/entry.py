@@ -52,12 +52,14 @@ def stop():
     if command_definition:
         command_definition.deleteMe()
 
-
 def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.log(f'{CMD_NAME} Command Created Event')
 
-    subprocess.run(['start',logger],shell=True,check=True)
+    if not os.path.exists(logger):
+        with open(logger, 'w+') as file:
+            file.write('')
 
+    subprocess.run(['start', logger], shell=True, check=True)
 
     futil.add_handler(args.command.execute, command_execute, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
@@ -66,15 +68,11 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
 def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
 
-
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
-    inputs = args.command.commandInputs
-
 
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
-    inputs = args.inputs
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
 
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
