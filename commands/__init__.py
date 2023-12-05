@@ -10,7 +10,7 @@ from .processSelect import entry as processSelect
 from .openHomeFolder import entry as openHomeFolder
 from .editProjectData import entry as editProjectData
 from .inputProjectData import entry as inputProjectData
-from .addImage import entry as addImage
+from .addImageBatch import entry as addImageBatch
 
 commands = [
     openBrowser,
@@ -23,7 +23,7 @@ commands = [
     openHomeFolder,
     openLogFile,
     inputProjectData,
-    addImage,
+    addImageBatch,
 ]
 
 
