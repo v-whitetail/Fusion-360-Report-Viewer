@@ -12,7 +12,7 @@ This is a very early work in progress. Please feel free to reach out! I'm not a 
 * **Process Add:** Add an attribute defined by custom report templates to components - This attribute will be exported along with the component definition
 * **Process Remove:** Remove an attribute defined by a custom report template
 * **Process Select:** Select all components with attributes defined by a custom report template
-* **\[WIP & REFACTOR\] Screen Shot / Associate Image With Process:** Produce a set of images associated with components - The image handle will be added as a component attribute to be exported along with the component definition
+* **Add Image Batch:** Produce a set of images associated with bodies under unique part id's.
 * **Start Server:** Launch a TCP server to host your "Home Page" directory on a localhost port (default is 8000) to view live updates to documents
 * **Stop Server:** Stop the localhost server in case of a crash or to reduce overhead
 
