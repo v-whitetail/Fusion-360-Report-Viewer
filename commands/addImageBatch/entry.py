@@ -5,10 +5,10 @@ from ...lib.selection_filters import *
 
 PALETTE_ID = config.sample_palette_id
 
-CMD_ID = f'addImage'
-CMD_NAME = 'Add Image'
+CMD_ID = f'addImageBatch'
+CMD_NAME = 'Add Image Batch'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Associate Image With Processing Station'
+CMD_Description = 'Automatically Associate Images with Processing Stations'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 
@@ -78,35 +78,35 @@ def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selected_templates = (
+    selected_templates = [
         selected_template.name
         for template in list_all_templates()
         if (selected_template := inputs.itemById(f'{template}_input'))
            and selected_template.value
-    )
+    ]
 
     ui = get_ui()
     design = adsk.fusion.Design.cast(get_product())
 
-    all_bodies = (
+    all_bodies = [
         body
         for component in design.allComponents
         for body in component.bRepBodies
-    )
+    ]
 
-    selected_bodies = (
+    selected_bodies = [
         body
         for component in design.allComponents
         for template in selected_templates
         for body in component.bRepBodies
-        if 0 < component.occurrences.count
-           and 0 < component.bRepBodies.count
-           and body.isValid
+        #if 0 < component.occurrences.count
+           #and 0 < component.bRepBodies.count
+           #and body.isValid
            #and body.isVisible
-           and not body.isTemporary
-           and not body.isTransient
-           and component.attributes.itemByName(f'Report Group', template)
-    )
+           #and not body.isTemporary
+           #and not body.isTransient
+           if component.attributes.itemByName(f'Report Group', template)
+    ]
 
     viewport = adsk.core.Application.get().activeViewport
 
@@ -115,8 +115,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     for body in selected_bodies:
         body.isVisible = True
-        part_id = f'{body.parentComponent.name}|{body.name}'
-        file_name = os.path.join(fileconfig.screenshot_dir, part_id, r'.png')
+        file_name = os.path.join(fileconfig.screenshot_dir, f'{part_id(body)}.png')
         viewport.fit()
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
         body.isVisible = False
