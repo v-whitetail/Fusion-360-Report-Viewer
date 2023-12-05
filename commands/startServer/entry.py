@@ -65,11 +65,9 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
-    inputs = args.command.commandInputs
 
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
-    inputs = args.inputs
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
 
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):

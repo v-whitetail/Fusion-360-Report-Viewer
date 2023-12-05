@@ -5,26 +5,29 @@ server_ip = '127.0.0.1'
 
 local_user = os.path.expanduser("~")
 config_file = os.path.abspath(__file__)
-config_folder = os.path.dirname(os.path.realpath(__file__))
+config_dir = os.path.dirname(os.path.realpath(__file__))
 
-home_folder = os.path.join( config_folder,'Home Page' )
-home_page = os.path.join( home_folder, 'index.html')
+home_page_dir = os.path.join(config_dir, 'Home Page')
+home_page = os.path.join(home_page_dir, 'index.html')
 
-reports = os.path.join( home_folder, 'Reports')
-templates = os.path.join( home_folder, 'Templates')
-project_data = os.path.join( home_folder, 'ProjectData')
+reports_dir = os.path.join(home_page_dir, 'Reports')
+templates_dir = os.path.join(home_page_dir, 'Templates')
+resources_dir = os.path.join(home_page_dir, 'Resources')
+project_data_dir = os.path.join(home_page_dir, 'Project Data')
 
-projectdata = os.path.join( home_folder, 'projectdata')
-server_exe = os.path.join( home_folder, 'tcp_localhost.exe')
-report_home_folder = os.path.join( home_folder, 'fusion_home_folder.exe')
-home_page_home_folder = os.path.join( home_folder, 'fusion_home_folder.exe')
+server_exe = os.path.join(home_page_dir, 'tcp_localhost.exe')
+
+screenshot_size = 256, 256
+screenshot_anti_alias = True
+screenshot_transparency = True
+screenshot_dir = os.path.join(resources_dir, 'screenshots')
 
 logger = os.path.join(
         local_user,
         'AppData',
         'local',
         'temp',
-        'projectdata_f360.log',
+        'project_data_f360.log',
         )
 
 project_data_variables = {

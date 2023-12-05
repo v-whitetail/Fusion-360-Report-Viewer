@@ -1,7 +1,6 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
 from ...lib import fusion360utils as futil
-from ...lib.config import home_folder as home_folder
 from ...lib.selection_filters import *
 
 PALETTE_ID = config.sample_palette_id
@@ -79,26 +78,52 @@ def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selected_templates = [
+    selected_templates = (
         selected_template.name
         for template in list_all_templates()
         if (selected_template := inputs.itemById(f'{template}_input'))
            and selected_template.value
-    ]
+    )
 
     ui = get_ui()
     design = adsk.fusion.Design.cast(get_product())
 
-    design.activateRootComponent()
-    occurrences = (
-        occurrence
-        for occurrence in design.rootComponent.allOccurrences
-        for template in selected_templates
-        if occurrence.isValid
-           and (component := occurrence.component)
-           and component.isValid
-           and component.attributes.itemByName('Report Group', template)
+    all_bodies = (
+        body
+        for component in design.allComponents
+        for body in component.bRepBodies
     )
+
+    selected_bodies = (
+        body
+        for component in design.allComponents
+        for template in selected_templates
+        for body in component.bRepBodies
+        if 0 < component.occurrences.count
+           and 0 < component.bRepBodies.count
+           and body.isValid
+           #and body.isVisible
+           and not body.isTemporary
+           and not body.isTransient
+           and component.attributes.itemByName(f'Report Group', template)
+    )
+
+    viewport = adsk.core.Application.get().activeViewport
+
+    for body in all_bodies:
+        body.isVisible = False
+
+    for body in selected_bodies:
+        body.isVisible = True
+        part_id = f'{body.parentComponent.name}|{body.name}'
+        file_name = os.path.join(fileconfig.screenshot_dir, part_id, r'.png')
+        viewport.fit()
+        viewport.saveAsImageFileWithOptions(save_image_options(file_name))
+        body.isVisible = False
+
+    for body in all_bodies:
+        body.isVisible = True
+
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
