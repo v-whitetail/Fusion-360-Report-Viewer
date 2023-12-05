@@ -1,5 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
-import os
+import os, zlib
 from . import config as fileconfig
 def get_ui():
     app = adsk.core.Application.get()
@@ -47,3 +47,10 @@ def save_image_options(filename: str):
     screenshot.width, screenshot.height = fileconfig.screenshot_size
     screenshot.isAntiAliased = fileconfig.screenshot_anti_alias
     screenshot.isBackgroundTransparent = fileconfig.screenshot_transparency
+    return screenshot
+
+def part_id(body: adsk.fusion.BRepBody):
+    body_name = body.name.encode()
+    component_name = body.parentComponent.name.encode()
+    document_name = body.parentComponent.parentDesign.parentDocument.name.encode()
+    return f'{(zlib.crc32(body_name + component_name + document_name) & 0xffffffff):08x}'
