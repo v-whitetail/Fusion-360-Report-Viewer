@@ -73,7 +73,7 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
             )
     selection.setSelectionLimits(0,0)
     selection.clearSelectionFilter()
-    selection.addSelectionFilter('Occurrences')
+    selection.addSelectionFilter(adsk.core.SelectionCommandInput.Occurrences)
 
     for template in list_all_templates():
         inputs.addBoolValueInput(
@@ -87,28 +87,28 @@ def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selected_templates: list[str] = []
-    for template in list_all_templates():
-        selected_template = inputs.itemById(f'{template}_input')
-        if selected_template.value:
-            selected_templates.append((selected_template.name))
+    selected_templates = [
+        selected_template.name
+        for template in list_all_templates()
+        if (selected_template := inputs.itemById(f'{template}_input'))
+        and selected_template.value
+    ]
 
-    selection_input = inputs.itemById(f'process_add_input')
+    selection_input: adsk.core.SelectionCommandInput = inputs.itemById(f'process_add_input')
 
-    entities = (
+    entities = [
         selection_input.selection(i).entity
         for i in range(selection_input.selectionCount)
-    )
-
-    components = (
+    ]
+    components = [
         occurrence.component
         for entity in entities
         if isinstance(occurrence := entity, adsk.fusion.Occurrence)
-    )
+    ]
 
-    for c in components:
-        add_reports(c, selected_templates)
-    
+    for component in components:
+        add_reports(component, selected_templates)
+
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
 

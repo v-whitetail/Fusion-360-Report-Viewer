@@ -1,14 +1,15 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
 from ...lib import fusion360utils as futil
+from ...lib.config import home_folder as home_folder
 from ...lib.selection_filters import *
 
 PALETTE_ID = config.sample_palette_id
 
-CMD_ID = f'processRemove'
-CMD_NAME = 'Remove Processing Station'
+CMD_ID = f'addImage'
+CMD_NAME = 'Add Image'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Removes a Procession station from a BRepBody'
+CMD_Description = 'Associate Image With Processing Station'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 
@@ -66,21 +67,12 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
 
     inputs = args.command.commandInputs
 
-    selection = inputs.addSelectionInput(
-            f'process_remove_input',
-            f'Selection',
-            f'Select Bodies to Add to Processing Station',
-            )
-    selection.setSelectionLimits(0,0)
-    selection.clearSelectionFilter()
-    selection.addSelectionFilter('Occurrences')
-
     for template in list_all_templates():
         inputs.addBoolValueInput(
-                f'{template}_input',
-                f'{template}',
-                True,
-                )
+            f'{template}_input',
+            f'{template}',
+            True,
+        )
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
@@ -94,20 +86,19 @@ def command_execute(args: adsk.core.CommandEventArgs):
            and selected_template.value
     ]
 
-    selection_input: adsk.core.SelectionCommandInput = inputs.itemById(f'process_remove_input')
+    ui = get_ui()
+    design = adsk.fusion.Design.cast(get_product())
 
-    entities = [
-        selection_input.selection(i).entity
-        for i in range(selection_input.selectionCount)
-    ]
-    components = [
-        occurrence.component
-        for entity in entities
-        if isinstance(occurrence := entity, adsk.fusion.Occurrence)
-    ]
-
-    for component in components:
-        remove_reports(component, selected_templates)
+    design.activateRootComponent()
+    occurrences = (
+        occurrence
+        for occurrence in design.rootComponent.allOccurrences
+        for template in selected_templates
+        if occurrence.isValid
+           and (component := occurrence.component)
+           and component.isValid
+           and component.attributes.itemByName('Report Group', template)
+    )
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
@@ -115,6 +106,9 @@ def command_preview(args: adsk.core.CommandEventArgs):
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
+
+def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
+    futil.log(f'{CMD_NAME} Validate Input Event')
 
 def command_destroy(args: adsk.core.CommandEventArgs):
     global local_handlers

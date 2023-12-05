@@ -78,12 +78,12 @@ def command_execute(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selected_templates: list[str] = []
-    for template in list_all_templates():
-
-        selected_template: adsk.core.BoolValueCommandInput = inputs.itemById(f'{template}_input')
-        if selected_template.value:
-            selected_templates.append((selected_template.name))
+    selected_templates = [
+        selected_template.name
+        for template in list_all_templates()
+        if (selected_template := inputs.itemById(f'{template}_input'))
+           and selected_template.value
+    ]
 
     ui = get_ui()
     design = adsk.fusion.Design.cast(get_product())
