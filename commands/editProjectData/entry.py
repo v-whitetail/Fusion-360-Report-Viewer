@@ -4,7 +4,7 @@ from ... import config
 from ...lib import fusion360utils as futil
 from ...lib.config import project_data_dir
 from ...lib.config import project_data_variables
-from ...lib.selection_filters import *
+from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id
 

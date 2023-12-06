@@ -4,7 +4,7 @@ from ...lib import fusion360utils as futil
 from ...lib.config import logger
 from ...lib.config import project_data_dir
 from ...lib.config import project_data_variables
-from ...lib.selection_filters import *
+from ...lib.report_viewer_utils import *
 from ...lib.Buffer import Builder
 from ... import config
 
