@@ -1,9 +1,10 @@
 import adsk.core, adsk.fusion, adsk.cam
 from . import commands
-from .lib.config import logger
-from .lib.Buffer import Builder
 from .lib import live_server
 from .lib import fusion360utils as futil
+from .lib.config import logger
+from .lib.Buffer import Builder
+from .lib.report_viewer_utils import empty_temp_files
 
 app = adsk.core.Application.get()
 ui = app.userInterface
@@ -19,6 +20,7 @@ def run(context):
         onDocumentSaved = DocumentSavedHandler()
         app.documentSaved.add(onDocumentSaved)
         handlers.append(onDocumentSaved)
+        empty_temp_files()
 
     except:
         futil.handle_error('run')
@@ -30,6 +32,7 @@ def stop(context):
         live_server.stop()
         futil.clear_handlers()
         commands.stop()
+        empty_temp_files()
 
     except:
         futil.handle_error('stop')

@@ -1,14 +1,13 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
-from ...lib import fusion360utils as futil
 from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id
 
-CMD_ID = f'processSelect'
-CMD_NAME = 'Select By Processing Station'
+CMD_ID = f'emptyTempFiles'
+CMD_NAME = 'Empty Temp Files'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Select Every Body with the Specified Processing Station'
+CMD_Description = 'Remove All Temporary Files'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 
@@ -19,7 +18,7 @@ PANEL_ID = f'processingStations'
 PANEL_NAME = f'PROCESSING STATIONS'
 PANEL_AFTER = f''
 
-IS_PROMOTED = True
+IS_PROMOTED = False
 
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 
@@ -64,53 +63,16 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.add_handler(args.command.executePreview, command_preview, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
-    inputs = args.command.commandInputs
-
-    for template in list_all_templates():
-        inputs.addBoolValueInput(
-                f'{template}_input',
-                f'{template}',
-                True,
-                )
-
 def command_execute(args: adsk.core.CommandEventArgs):
 
     futil.log(f'{CMD_NAME} Command Execute Event')
-    inputs = args.command.commandInputs
-
-    selected_templates = [
-        selected_template.name
-        for template in list_all_templates()
-        if (selected_template := inputs.itemById(f'{template}_input'))
-           and selected_template.value
-    ]
-
-    ui = get_ui()
-    design = adsk.fusion.Design.cast(get_product())
-    
-    design.activateRootComponent()
-    occurrences = (
-        occurrence
-        for occurrence in design.rootComponent.allOccurrences
-        for template in selected_templates
-        if occurrence.isValid
-            and (component := occurrence.component)
-            and component.isValid
-            and component.attributes.itemByName('Report Group', template)
-    )
-    for occurrence in occurrences:
-        ui.activeSelections.add(occurrence)
-
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
-
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
-
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
     futil.log(f'{CMD_NAME} Validate Input Event')
-
 def command_destroy(args: adsk.core.CommandEventArgs):
     global local_handlers
     local_handlers = []

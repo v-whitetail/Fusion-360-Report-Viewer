@@ -1,6 +1,7 @@
 import adsk.core, adsk.fusion, adsk.cam
 import os, zlib
 from . import config as fileconfig
+from . import fusion360utils as futil
 def get_ui():
     app = adsk.core.Application.get()
     ui = app.userInterface
@@ -54,3 +55,10 @@ def part_id(body: adsk.fusion.BRepBody):
     component_name = body.parentComponent.name.encode()
     document_name = body.parentComponent.parentDesign.parentDocument.name.encode()
     return f'{(zlib.crc32(body_name + component_name + document_name) & 0xffffffff):08x}'
+
+def empty_temp_files():
+    for file in os.listdir(fileconfig.screenshot_dir):
+        try:
+            os.remove(os.path.join(fileconfig.screenshot_dir,file))
+        except Exception as e:
+            futil.log(f'failed to remove {file}\nexception: {e}')
