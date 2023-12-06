@@ -63,6 +63,8 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.add_handler(args.command.executePreview, command_preview, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
+    empty_temp_files()
+
 def command_execute(args: adsk.core.CommandEventArgs):
 
     futil.log(f'{CMD_NAME} Command Execute Event')
