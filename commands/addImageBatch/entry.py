@@ -99,13 +99,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
         for component in design.allComponents
         for template in selected_templates
         for body in component.bRepBodies
-        #if 0 < component.occurrences.count
-           #and 0 < component.bRepBodies.count
-           #and body.isValid
-           #and body.isVisible
-           #and not body.isTemporary
-           #and not body.isTransient
-           if component.attributes.itemByName(f'Report Group', template)
+        if component.attributes.itemByName(f'Report Group', template)
     ]
 
     viewport = adsk.core.Application.get().activeViewport
@@ -114,14 +108,36 @@ def command_execute(args: adsk.core.CommandEventArgs):
         body.isVisible = False
 
     for body in selected_bodies:
+        occurrences = [
+            occurrence
+            for occurrence
+            in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
+        ]
+        names = [
+            occurrence.fullPathName
+            for occurrence
+            in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
+        ]
+        futil.log(body.name)
+        futil.log(format(names))
+        if 1 < len(occurrences):
+            futil.log('len')
+            occurrences[0].isLightBulbOn = True
+            for occurrence in occurrences[1:]:
+                futil.log('more occs')
+                occurrence.isLightBulbOn = False
         body.isVisible = True
         file_name = os.path.join(fileconfig.screenshot_dir, f'{part_id(body)}.png')
         viewport.fit()
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
         body.isVisible = False
+        for occurrence in occurrences:
+            occurrence.isLightBulbOn = True
 
     for body in all_bodies:
         body.isVisible = True
+    for occurrence in design.rootComponent.allOccurrences:
+        occurrence.isLightBulgOn = True
 
 
 def command_preview(args: adsk.core.CommandEventArgs):
