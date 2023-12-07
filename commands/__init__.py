@@ -1,5 +1,6 @@
 import adsk.core, adsk.fusion, adsk.cam
 
+from .addImage import entry as addImage
 from .stopServer import entry as stopServer
 from .processAdd import entry as processAdd
 from .openBrowser import entry as openBrowser
@@ -14,17 +15,18 @@ from .editProjectData import entry as editProjectData
 from .inputProjectData import entry as inputProjectData
 
 commands = [
-    openBrowser,
     startServer,
     stopServer,
+    openBrowser,
     processAdd,
-    processSelect,
     processRemove,
+    processSelect,
     editProjectData,
     openHomeFolder,
     openLogFile,
     inputProjectData,
     addImageBatch,
+    addImage,
     emptyTempFiles,
 ]
 

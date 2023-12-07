@@ -2,23 +2,35 @@ import adsk.core
 import os
 from ...lib import live_server
 from ...lib import fusion360utils as futil
+from ...lib.config import server_ip, server_port, home_page_dir, config_file
 
 app = adsk.core.Application.get()
 ui = app.userInterface
 
-CMD_ID = f'startLocalhostServer'
+CMD_ID = 'startLocalhostServer'
 CMD_NAME = 'Start Server'
-CMD_BESIDE_ID = f'openLocalhostBrowser'
-CMD_Description = 'A Fusion 360 Add-in Command with a dialog'
+CMD_BESIDE_ID = ''
+CMD_Description = (
+    f'Launch a Localhost Server'
+    f'\n\n'
+    f'Launch a server on your pc to host your report files. '
+    f'This allows you to view your reports in your internet browser '
+    f'as live documents. The browser view will automatically refresh '
+    f'whenever a document in your Home Folder is modified. \n\n The '
+    f'current configuration will launch a localhost server with the '
+    f'IP address {server_ip} on port {server_port} hosting '
+    f'{home_page_dir}. Each of these settings can be configured '
+    f'individually at {config_file}'
+)
 
-WORKSPACE_ID = f'FusionSolidEnvironment'
+WORKSPACE_ID = 'FusionSolidEnvironment'
 
-TAB_ID = f'customReportsTab'
-TAB_NAME = f'CUSTOM REPORTS'
+TAB_ID = 'customReportsTab'
+TAB_NAME = 'CUSTOM REPORTS'
 
-PANEL_ID = f'reportBrowser'
-PANEL_NAME = f'REPORT BROWSER'
-PANEL_AFTER = f''
+PANEL_ID = 'reportBrowser'
+PANEL_NAME = 'REPORT BROWSER'
+PANEL_AFTER = ''
 
 IS_PROMOTED = True
 

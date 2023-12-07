@@ -14,8 +14,8 @@ WORKSPACE_ID = f'FusionSolidEnvironment'
 TAB_ID = f'customReportsTab'
 TAB_NAME = f'CUSTOM REPORTS'
 
-PANEL_ID = f'processingStations'
-PANEL_NAME = f'PROCESSING STATIONS'
+PANEL_ID = f'customProjectData'
+PANEL_NAME = f'PROJECT DATA'
 PANEL_AFTER = f''
 
 IS_PROMOTED = False

@@ -11,7 +11,7 @@ PALETTE_ID = config.sample_palette_id
 CMD_ID = f'hiddenEditProjectData'
 CMD_NAME = f'Edit Project Data'
 CMD_BESIDE_ID = f''
-CMD_Description = f'Edit Project Data'
+CMD_Description = f'Assign Data to each "Project Data" Field'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

@@ -9,7 +9,15 @@ ui = app.userInterface
 CMD_ID = f'stopLocalhostServer'
 CMD_NAME = 'Stop Server'
 CMD_BESIDE_ID = f'startLocalhostServer'
-CMD_Description = 'A Fusion 360 Add-in Command with a dialog'
+CMD_Description = (
+    f'Stop the Localhost Server'
+    f'\n\n'
+    f'In the event your report browser is behaving unexpectedly '
+    f'or causing your system to slow down, you can use this '
+    f'command to stop the process. \n\n NOTE: If this command is '
+    f'used, you should manually refresh the page in your internet '
+    f'browser'
+)
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

@@ -8,7 +8,7 @@ PALETTE_ID = config.sample_palette_id
 CMD_ID = f'processRemove'
 CMD_NAME = 'Remove Processing Station'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Removes a Procession station from a BRepBody'
+CMD_Description = 'Remove Processing Station from Components'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

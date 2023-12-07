@@ -8,7 +8,7 @@ PALETTE_ID = config.sample_palette_id
 CMD_ID = f'processAdd'
 CMD_NAME = f'Add Processing Station'
 CMD_BESIDE_ID = f''
-CMD_Description = f'Adds a Processing Station to a BRepBody'
+CMD_Description = f'Add Processing Stations to Components'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

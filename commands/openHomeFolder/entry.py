@@ -9,7 +9,16 @@ ui = app.userInterface
 CMD_ID = f'openHomeFolder'
 CMD_NAME = 'Open Home Folder'
 CMD_BESIDE_ID = f''
-CMD_Description = 'A Fusion 360 Add-in Command with a dialog'
+CMD_Description = (
+    f'Open the Home Folder in the File Explorer'
+    f'\n\n'
+    f'The "Home Folder" is the entry point to view the active reports. '
+    f'It contains the actual home page document displayed in the browser, '
+    f'the application connecting the folder to your internet browser, '
+    f'all active template documents, all active report documents, and all '
+    f'associated media. Screenshots produced for reports can be found in '
+    f'Home Page > Resources > screenshots'
+)
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

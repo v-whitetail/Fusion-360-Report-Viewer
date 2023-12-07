@@ -13,10 +13,13 @@ PALETTE_ID = config.sample_palette_id
 CMD_ID = f'inputProjectData'
 CMD_NAME = f'Create Project Data'
 CMD_BESIDE_ID = f''
-CMD_Description = f'''Create Project Data and Export to Reports
-
-NOTE: This command primarily exists to be called when the document is saved but there is no project data found.
-You should typically use Edit Project Data instead of this command.'''
+CMD_Description = (
+    f'Create Project Data and Export to Reports '
+    f'\n\n'
+    f'NOTE: This command primarily exists to be called when the '
+    f'document is saved but there is no project data found. You '
+    f'should typically use Edit Project Data instead of this command.'
+)
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

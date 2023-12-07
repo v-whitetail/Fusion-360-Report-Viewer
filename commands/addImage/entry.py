@@ -1,14 +1,14 @@
 import adsk.core, adsk.fusion, adsk.cam
+import time
 from ... import config
-from ...lib import fusion360utils as futil
 from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id
 
-CMD_ID = f'addImageBatch'
-CMD_NAME = 'Add Image Batch'
+CMD_ID = f'addImage'
+CMD_NAME = 'Add Image'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Automatically Associate Images with Processing Stations'
+CMD_Description = 'Manually Associate an Image with a Processing Stations'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 
@@ -65,71 +65,32 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
     inputs = args.command.commandInputs
-
-    for template in list_all_templates():
-        inputs.addBoolValueInput(
-            f'{template}_input',
-            f'{template}',
-            True,
-        )
+    selection = inputs.addSelectionInput(
+        f'image_add_input_body',
+        f'Selection',
+        f'Select a Body to Add an Image to',
+    )
+    selection.setSelectionLimits(1,1)
+    selection.clearSelectionFilter()
+    selection.addSelectionFilter(adsk.core.SelectionCommandInput.Bodies)
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selected_templates = [
-        selected_template.name
-        for template in list_all_templates()
-        if (selected_template := inputs.itemById(f'{template}_input'))
-           and selected_template.value
-    ]
+    selection_input = inputs.itemById(f'image_add_input_body')
 
-    ui = get_ui()
-    design = adsk.fusion.Design.cast(get_product())
-
-    all_bodies = [
-        body
-        for component in design.allComponents
-        for body in component.bRepBodies
-    ]
-
-    selected_bodies = [
-        body
-        for component in design.allComponents
-        for template in selected_templates
-        for body in component.bRepBodies
-        if component.attributes.itemByName(f'Report Group', template)
-    ]
-
-    viewport = adsk.core.Application.get().activeViewport
-
-    for body in all_bodies:
-        body.isVisible = False
-
-    for body in selected_bodies:
-        occurrences = [
-            occurrence
-            for occurrence
-            in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
-        ]
-        if 1 < len(occurrences):
-            occurrences[0].isLightBulbOn = True
-            for occurrence in occurrences[1:]:
-                occurrence.isLightBulbOn = False
-        body.isVisible = True
-        file_name = os.path.join(fileconfig.screenshot_dir, f'{part_id(body)}.png')
+    if ((body := selection_input.selection(0).entity)
+            and isinstance(body, adsk.fusion.BRepBody)):
+        file_name = os.path.join(
+            fileconfig.screenshot_dir,
+            f'user-{part_id(body)}.png'
+        )
+        viewport = adsk.core.Application.get().activeViewport
         viewport.fit()
+        get_ui().activeSelections.removeByEntity(body)
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
-        body.isVisible = False
-        for occurrence in occurrences:
-            occurrence.isLightBulbOn = True
-
-    for body in all_bodies:
-        body.isVisible = True
-    for occurrence in design.rootComponent.allOccurrences:
-        occurrence.isLightBulgOn = True
-
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')

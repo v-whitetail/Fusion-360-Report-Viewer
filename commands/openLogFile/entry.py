@@ -9,7 +9,18 @@ ui = app.userInterface
 CMD_ID = f'openLocalhostLogFile'
 CMD_NAME = 'Open Log File'
 CMD_BESIDE_ID = f''
-CMD_Description = 'A Fusion 360 Add-in Command with a dialog'
+CMD_Description = (
+    f'Open the Log File in the Default Text Editor'
+    f'\n\n'
+    f'The log file a temporary text file which shows all the data '
+    f'exported from Fusion 360 to another process. This is useful '
+    f'for understanding the exact layout of the design data before '
+    f'it is processed into a report, and it is generally useful '
+    f'or debugging. \n\n If a piece of data needs to be exported to '
+    f'a report but does not show in the log file, the code for this '
+    f'AddIn located in the "Buffer" module may need to be adjusted '
+    f'to include it.'
+)
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 
@@ -20,7 +31,7 @@ PANEL_ID = f'customProjectData'
 PANEL_NAME = f'PROJECT DATA'
 PANEL_AFTER = f''
 
-IS_PROMOTED = True
+IS_PROMOTED = False
 
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 

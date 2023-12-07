@@ -11,7 +11,10 @@ ui = app.userInterface
 CMD_ID = f'openLocalhostBrowser'
 CMD_NAME = 'Open Browser'
 CMD_BESIDE_ID = f''
-CMD_Description = 'A Fusion 360 Add-in Command with a dialog'
+CMD_Description = (
+    f'Open http://localhost:{config.server_port} in the '
+    f'Default Internet Browser'
+)
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

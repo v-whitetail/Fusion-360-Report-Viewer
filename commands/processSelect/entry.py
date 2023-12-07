@@ -8,7 +8,7 @@ PALETTE_ID = config.sample_palette_id
 CMD_ID = f'processSelect'
 CMD_NAME = 'Select By Processing Station'
 CMD_BESIDE_ID = f''
-CMD_Description = 'Select Every Body with the Specified Processing Station'
+CMD_Description = 'Select Every Component with the These Processing Stations:'
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
 

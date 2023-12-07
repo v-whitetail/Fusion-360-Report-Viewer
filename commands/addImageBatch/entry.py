@@ -1,6 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
-from ...lib import fusion360utils as futil
 from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id
@@ -113,18 +112,9 @@ def command_execute(args: adsk.core.CommandEventArgs):
             for occurrence
             in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
         ]
-        names = [
-            occurrence.fullPathName
-            for occurrence
-            in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
-        ]
-        futil.log(body.name)
-        futil.log(format(names))
         if 1 < len(occurrences):
-            futil.log('len')
             occurrences[0].isLightBulbOn = True
             for occurrence in occurrences[1:]:
-                futil.log('more occs')
                 occurrence.isLightBulbOn = False
         body.isVisible = True
         file_name = os.path.join(fileconfig.screenshot_dir, f'{part_id(body)}.png')
