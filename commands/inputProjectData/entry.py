@@ -1,11 +1,7 @@
 import adsk.core, adsk.fusion, adsk.cam
 import json
-from ...lib import fusion360utils as futil
-from ...lib.config import logger
-from ...lib.config import project_data_dir
-from ...lib.config import project_data_variables
 from ...lib.report_viewer_utils import *
-from ...lib.Buffer import Builder
+from ...lib import Buffer
 from ... import config
 
 PALETTE_ID = config.sample_palette_id
@@ -19,6 +15,8 @@ CMD_Description = (
     f'NOTE: This command primarily exists to be called when the '
     f'document is saved but there is no project data found. You '
     f'should typically use Edit Project Data instead of this command.'
+    f'\n\n This function will export design data to the Home Page '
+    f'upon completion.'
 )
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
@@ -89,29 +87,24 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
-    document = get_document()
-    scope_folder = document.dataFile.parentFolder
-    project_folder = scope_folder.parentFolder
-    project_data_file_name = project_folder.name + '.json'
-    project_data_file = os.path.join(project_data_dir,project_data_file_name)
-
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    project_data = {}
+    project_data = {
+        variable_handle: project_datum.text
+        for variable_handle, variable_name in project_data_variables.items()
+        if isinstance(
+            (project_datum := inputs.itemById(f'{variable_handle}_input')),
+            adsk.core.TextBoxCommandInput
+        )
+    }
 
-    for variable_handle, variable_name in project_data_variables.items():
-        project_data_input: adsk.core.TextBoxCommandInput = inputs.itemById(f'{variable_handle}_input')
-        project_data[variable_name] = project_data_input.text
-
-
-    with open(os.path.abspath(project_data_file),'w') as file:
+    with open(os.path.abspath(get_project_data(get_document())), 'w') as file:
         file.flush()
         file.write(json.dumps(project_data))
 
-    buffer = Builder.build()
     with open(logger, 'a+') as log:
-        log.write(buffer)
+        log.write(Buffer.build())
 
 def command_preview(args: adsk.core.CommandEventArgs):
     inputs = args.command.commandInputs

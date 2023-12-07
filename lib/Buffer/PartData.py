@@ -40,7 +40,7 @@ def get(design: adsk.fusion.Design):
             get_report_groups(body.parentComponent),
         ]
 
-        buffer[f'row{part_id(body)}'] = variables
+        buffer[f'{part_id(body)}'] = variables
 
     return buffer
 
@@ -58,7 +58,7 @@ def get_report_groups(component: adsk.fusion.Component):
 
 def format_units(design: adsk.fusion.Design, measurement: float):
     return design.unitsManager.formatInternalValue(
-        internalValue=measurement,
-        displayUnits='in',
-        showUnits=False
+        measurement,
+        'in',
+        False
     )

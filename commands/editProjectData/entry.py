@@ -81,23 +81,19 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
-    document = get_document()
-    scope_folder = document.dataFile.parentFolder
-    project_folder = scope_folder.parentFolder
-    project_data_file_name = project_folder.name + '.json'
-    project_data_file = os.path.join(project_data_dir, project_data_file_name)
-
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    project_data = {}
+    project_data = {
+        variable_handle: project_datum.text
+        for variable_handle, variable_name in project_data_variables.items()
+        if isinstance(
+            (project_datum := inputs.itemById(f'{variable_handle}_input')),
+            adsk.core.TextBoxCommandInput
+        )
+    }
 
-    for variable_handle, variable_name in project_data_variables.items():
-        project_data_input: adsk.core.TextBoxCommandInput = inputs.itemById(f'{variable_handle}_input')
-        project_data[variable_name] = project_data_input.text
-
-
-    with open(os.path.abspath(project_data_file),'w') as file:
+    with open(os.path.abspath(get_project_data(get_document())), 'w') as file:
         file.flush()
         file.write(json.dumps(project_data))
 

@@ -57,3 +57,8 @@ def empty_temp_files():
             os.remove(os.path.join(screenshot_dir,file))
         except Exception as e:
             futil.log(f'failed to remove {file}\nexception: {e}')
+
+def get_project_data(document: adsk.core.Document):
+    scope_folder = document.dataFile.parentFolder
+    project_folder = scope_folder.parentFolder
+    return os.path.join(project_data_dir, f'{project_folder.name}.json')

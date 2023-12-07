@@ -17,9 +17,9 @@ def run(context):
         live_server.start()
         commands.start()
 
-        onDocumentSaved = DocumentSavedHandler()
-        app.documentSaved.add(onDocumentSaved)
-        handlers.append(onDocumentSaved)
+        on_document_saved = DocumentSavedHandler()
+        app.documentSaved.add(on_document_saved)
+        handlers.append(on_document_saved)
         empty_temp_files()
 
     except:

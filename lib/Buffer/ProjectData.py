@@ -1,17 +1,13 @@
 import adsk.core, adsk.fusion, adsk.cam
 import os, json
 from ..config import project_data_dir
-from ..report_viewer_utils import get_ui
+from ..report_viewer_utils import get_ui, get_project_data
 from .. import fusion360utils as futil
 
 def get(document: adsk.core.Document):
     
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
-    project_data = os.path.join(
-        project_data_dir,
-        f'{project_folder.name}.json'
-    )
 
     buffer = {
         'proj': project_folder.name,
@@ -22,7 +18,7 @@ def get(document: adsk.core.Document):
     }
 
     try:
-        with open(os.path.abspath(project_data), 'r') as file:
+        with open(os.path.abspath(get_project_data(document)), 'r') as file:
             metadata = json.loads(file.read())
             buffer.update(metadata)
     except IOError as e:

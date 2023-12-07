@@ -1,5 +1,4 @@
 import adsk.core, adsk.fusion, adsk.cam
-import time
 from ... import config
 from ...lib.report_viewer_utils import *
 
@@ -84,7 +83,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     if ((body := selection_input.selection(0).entity)
             and isinstance(body, adsk.fusion.BRepBody)):
         file_name = os.path.join(
-            fileconfig.screenshot_dir,
+            screenshot_dir,
             f'user-{part_id(body)}.png'
         )
         viewport = adsk.core.Application.get().activeViewport
