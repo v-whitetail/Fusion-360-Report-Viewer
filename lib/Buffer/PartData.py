@@ -1,4 +1,6 @@
 import adsk.core, adsk.fusion, adsk.cam
+from ..report_viewer_utils import part_id
+
 def get(design: adsk.fusion.Design):
     
     variables_in_buffer = [
@@ -13,36 +15,50 @@ def get(design: adsk.fusion.Design):
         "rep",
     ]
 
-    buffer = {}
-    buffer["headers"] = variables_in_buffer
+    buffer = {'headers': variables_in_buffer}
 
-    counter = 0
-    for occurrence in design.rootComponent.allOccurrences:
-        for body in occurrence.bRepBodies:
+    visible_bodies = [
+        body
+        for occurrence in design.rootComponent.allOccurrences
+        for body in occurrence.bRepBodies
+        if body.isVisible and occurrence.isLightBulbOn
+    ]
 
-            if body.isVisible:
-                counter += 1
-                t, w, l = sorted(body.boundingBox.minPoint.vectorTo(body.boundingBox.maxPoint).asArray())
-                
-                variables = [
-                    body.name,
-                    body.parentComponent.name,
-                    body.material.name,
-                    body.appearance.name,
-                    design.unitsManager.formatInternalValue(t,"in",False),
-                    design.unitsManager.formatInternalValue(w,"in",False),
-                    design.unitsManager.formatInternalValue(l,"in",False),
-                    body.parentComponent.description,
-                    get_report_groups(body.parentComponent),
-                ]
+    for body in visible_bodies:
 
-                buffer[f'row{counter}'] = variables
+        t, w, l = get_size(body)
+
+        variables = [
+            body.name,
+            body.parentComponent.name,
+            body.material.name,
+            body.appearance.name,
+            format_units(design, t),
+            format_units(design, w),
+            format_units(design, l),
+            body.parentComponent.description,
+            get_report_groups(body.parentComponent),
+        ]
+
+        buffer[f'row{part_id(body)}'] = variables
 
     return buffer
 
-def get_report_groups(component: adsk.fusion.Component):
-    reports = []
-    for attr in component.attributes:
-        reports.append(attr.name)
-    return reports
+def get_size(body: adsk.fusion.BRepBody):
+    bounding_box = body.boundingBox
+    min_point, max_point = bounding_box.minPoint, bounding_box.maxPoint
+    return sorted(min_point.vectorTo(max_point).asArray())
 
+def get_report_groups(component: adsk.fusion.Component):
+    return [
+        attribute.name
+        for attribute in component.attributes
+        if attribute.groupName == 'Report Group'
+    ]
+
+def format_units(design: adsk.fusion.Design, measurement: float):
+    return design.unitsManager.formatInternalValue(
+        internalValue=measurement,
+        displayUnits='in',
+        showUnits=False
+    )

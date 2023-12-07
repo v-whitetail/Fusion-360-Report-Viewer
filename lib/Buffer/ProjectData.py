@@ -1,48 +1,32 @@
 import adsk.core, adsk.fusion, adsk.cam
-
-import os
-import json
+import os, json
 from ..config import project_data_dir
+from ..report_viewer_utils import get_ui
+from .. import fusion360utils as futil
 
-def get( app: adsk.core.Application):
+def get(document: adsk.core.Document):
     
-    ui = app.userInterface
-    document = app.activeDocument
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
-    project_data_file_name = project_folder.name + '.json'
-    project_data_file = os.path.join(project_data_dir, project_data_file_name)
+    project_data = os.path.join(
+        project_data_dir,
+        f'{project_folder.name}.json'
+    )
 
-    variable_names = [
-        "file",
-        "vers",
-        "auth",
-        "scop",
-        "proj",
-    ]
-
-    variable_vals = [
-        document.name.removesuffix("v{}".format(document.dataFile.versionNumber)),
-        document.dataFile.versionNumber,
-        document.dataFile.createdBy.displayName,
-        scope_folder.name,
-        project_folder.name,
-    ]
-
-    buffer = {}
-
-    for name, value in zip(variable_names, variable_vals):
-        buffer[name] = value
+    buffer = {
+        'proj': project_folder.name,
+        'scop': scope_folder.name,
+        'auth': document.dataFile.createdBy.displayName,
+        'vers': (version := document.dataFile.versionNumber),
+        'file': document.name.removesuffix(f'v{version}'),
+    }
 
     try:
-        with open(os.path.abspath(project_data_file), 'r') as file:
+        with open(os.path.abspath(project_data), 'r') as file:
             metadata = json.loads(file.read())
             buffer.update(metadata)
-
-    except:
-        with open(os.path.abspath(project_data_file),'w') as file:
-            ui.commandDefinitions.itemById('inputProjectData').execute()
+    except IOError as e:
+        futil.log(f'{e}')
+        get_ui().commandDefinitions.itemById('inputProjectData').execute()
 
     return buffer
-
-

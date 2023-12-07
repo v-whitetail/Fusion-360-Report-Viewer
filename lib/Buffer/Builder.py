@@ -1,15 +1,16 @@
 import adsk.core, adsk.fusion, adsk.cam
 import json
 from . import UserParameters, PartData, ProjectData
+from ..report_viewer_utils import get_document, get_product
+
 
 def build():
-    app = adsk.core.Application.get()
-    product = app.activeProduct
-    design = adsk.fusion.Design.cast(product)
+    design = adsk.fusion.Design.cast(get_product())
     
-    buffer = {}
-    buffer["projdata"] = ProjectData.get(app)
-    buffer["userdata"] = UserParameters.get(design)
-    buffer["partdata"] = PartData.get(design)
+    buffer = {
+        'projdata': ProjectData.get(get_document()),
+        'userdata': UserParameters.get(design),
+        'partdata': PartData.get(design),
+    }
 
-    return json.dumps(buffer,indent=True)
+    return json.dumps(buffer, indent=True)

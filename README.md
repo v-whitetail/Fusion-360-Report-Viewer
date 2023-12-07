@@ -5,10 +5,10 @@ This is a very early work in progress. Please feel free to reach out! I'm not a
 programmer by trade, and any input is greatly appreciated!
 
 ## Commands ##
-* **Add Image:** Produce a single of images associated with bodies under unique
-  part id's.
+* **Add Image:** Take a screenshot at the current view to associate with any 
+  selected body.
 * **Add Image Batch:** Produce a set of images associated with bodies under
-  unique part id's.
+  unique part id's
 * **Edit Project Data:** Include custom variables in an associated JSON that 
 * **Empty Temp Files:** Remove all temporary files used in report documents 
   (currently this is limited to images)

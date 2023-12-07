@@ -22,14 +22,18 @@ screenshot_anti_alias = True
 screenshot_transparency = True
 screenshot_dir = os.path.join(resources_dir, 'screenshots')
 
+temp_file_dir = os.path.join(
+    local_user,
+    'AppData',
+    'local',
+    'temp',
+)
+
 logger = os.path.join(
-        local_user,
-        'AppData',
-        'local',
-        'temp',
-        'project_data_f360.log',
-        )
+    temp_file_dir,
+    'project_data_f360.log',
+)
 
 project_data_variables = {
-        'addy': 'Project Address',
-        }
+    'addy': 'Project Address',
+}
