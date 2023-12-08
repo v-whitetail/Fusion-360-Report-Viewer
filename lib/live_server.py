@@ -1,6 +1,5 @@
 import threading
 import subprocess
-from .config import *
 from .report_viewer_utils import *
 from . import fusion360utils as futil
 

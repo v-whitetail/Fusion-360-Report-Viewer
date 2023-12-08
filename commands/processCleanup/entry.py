@@ -1,19 +1,19 @@
 import adsk.core, adsk.fusion, adsk.cam
-import os, webbrowser
-from ...lib import config
-from ...lib import fusion360utils as futil
+from ... import config
+from ...lib.report_viewer_utils import *
 
-port = config.server_port
+PALETTE_ID = config.sample_palette_id
 
-app = adsk.core.Application.get()
-ui = app.userInterface
-
-CMD_ID = f'openLocalhostBrowser'
-CMD_NAME = 'Open Browser'
+CMD_ID = f'processCleanup'
+CMD_NAME = 'Clean Unused Processing Stations'
 CMD_BESIDE_ID = f''
 CMD_Description = (
-    f'Open http://localhost:{config.server_port} in the '
-    f'Default Internet Browser'
+    f'Remove all orphaned processing stations from the active design. '
+    f'A process is considered orphaned if you do not have a template '
+    f'corresponding to the \'Report Group\' attribute on a given '
+    f'component. \n\n NOTE: Ensure you have an up to date copy of '
+    f'your reports folder before using this command to prevent removing '
+    f'useful processing stations from the design.'
 )
 
 WORKSPACE_ID = f'FusionSolidEnvironment'
@@ -21,33 +21,35 @@ WORKSPACE_ID = f'FusionSolidEnvironment'
 TAB_ID = f'customReportsTab'
 TAB_NAME = f'CUSTOM REPORTS'
 
-PANEL_ID = f'reportBrowser'
-PANEL_NAME = f'REPORT BROWSER'
+PANEL_ID = f'processingStations'
+PANEL_NAME = f'PROCESSING STATIONS'
 PANEL_AFTER = f''
 
-IS_PROMOTED = True
+IS_PROMOTED = False
 
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', '')
 
 local_handlers = []
-
 def start():
+    ui = get_ui()
     cmd_def = ui.commandDefinitions.addButtonDefinition(CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER)
     futil.add_handler(cmd_def.commandCreated, command_created)
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
-
     toolbar_tab = workspace.toolbarTabs.itemById(TAB_ID)
+
     if toolbar_tab is None:
         toolbar_tab = workspace.toolbarTabs.add(TAB_ID, TAB_NAME)
+
     panel = toolbar_tab.toolbarPanels.itemById(PANEL_ID)
+
     if panel is None:
         panel = toolbar_tab.toolbarPanels.add(PANEL_ID, PANEL_NAME, PANEL_AFTER, False)
 
     control = panel.controls.addCommand(cmd_def, CMD_BESIDE_ID, False)
     control.isPromoted = IS_PROMOTED
 
-
 def stop():
+    ui = get_ui()
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
     panel = workspace.toolbarPanels.itemById(PANEL_ID)
     command_control = panel.controls.itemById(CMD_ID)
@@ -59,36 +61,46 @@ def stop():
     if command_definition:
         command_definition.deleteMe()
 
-
 def command_created(args: adsk.core.CommandCreatedEventArgs):
+
     futil.log(f'{CMD_NAME} Command Created Event')
 
-    webbrowser.open(f'http://localhost:{port}')
-
     futil.add_handler(args.command.execute, command_execute, local_handlers=local_handlers)
+    futil.add_handler(args.command.inputChanged, command_input_changed, local_handlers=local_handlers)
+    futil.add_handler(args.command.executePreview, command_preview, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
 
+
 def command_execute(args: adsk.core.CommandEventArgs):
+
     futil.log(f'{CMD_NAME} Command Execute Event')
 
+    design = adsk.fusion.Design.cast(get_product())
+    orphaned_attributes = [
+        attribute
+        for template in list_all_templates()
+        for component in design.allComponents
+        for attribute in component.attributes
+        if not any(template) == attribute.name
+    ]
+    details = [
+        (
+            f'{item.name}::{attribute.groupName}::{attribute.name}::{attribute.value}//'
+        )
+        for attribute in orphaned_attributes
+        if isinstance(item := attribute.parent, (adsk.fusion.Component, adsk.fusion.BRepBody))
+    ]
+    get_ui().messageBox(f'Removed Content:\n\n{details}')
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')
-    inputs = args.command.commandInputs
-
 
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
 
-
-def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
-    futil.log(f'{CMD_NAME} Validate Input Event')
-        
-
 def command_destroy(args: adsk.core.CommandEventArgs):
-    futil.log(f'{CMD_NAME} Command Destroy Event')
-
     global local_handlers
     local_handlers = []
+    futil.log(f'{CMD_NAME} Command Destroy Event')

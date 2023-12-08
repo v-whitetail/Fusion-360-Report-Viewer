@@ -85,19 +85,17 @@ def command_execute(args: adsk.core.CommandEventArgs):
            and selected_template.value
     ]
 
-    ui = get_ui()
     design = adsk.fusion.Design.cast(get_product())
-    
     design.activateRootComponent()
     occurrences = (
         occurrence
         for occurrence in design.rootComponent.allOccurrences
         for template in selected_templates
-        if occurrence.isValid
-            and (component := occurrence.component)
-            and component.isValid
-            and component.attributes.itemByName('Report Group', template)
+        if (component := occurrence.component)
+           and component.attributes.itemByName('Report Group', template)
     )
+
+    ui = get_ui()
     for occurrence in occurrences:
         ui.activeSelections.add(occurrence)
 

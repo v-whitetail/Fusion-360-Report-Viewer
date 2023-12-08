@@ -84,7 +84,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
            and selected_template.value
     ]
 
-    ui = get_ui()
     design = adsk.fusion.Design.cast(get_product())
 
     all_bodies = [

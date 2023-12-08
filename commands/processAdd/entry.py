@@ -91,7 +91,6 @@ def command_execute(args: adsk.core.CommandEventArgs):
         selected_template.name
         for template in list_all_templates()
         if (selected_template := inputs.itemById(f'{template}_input'))
-        and selected_template.value
     ]
 
     selection_input: adsk.core.SelectionCommandInput = inputs.itemById(f'process_add_input')
@@ -100,11 +99,11 @@ def command_execute(args: adsk.core.CommandEventArgs):
         selection_input.selection(i).entity
         for i in range(selection_input.selectionCount)
     ]
-    components = [
+    components = (
         occurrence.component
         for entity in entities
         if isinstance(occurrence := entity, adsk.fusion.Occurrence)
-    ]
+    )
 
     for component in components:
         add_reports(component, selected_templates)

@@ -1,6 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
-from ...lib import fusion360utils as futil
 from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id
@@ -100,11 +99,11 @@ def command_execute(args: adsk.core.CommandEventArgs):
         selection_input.selection(i).entity
         for i in range(selection_input.selectionCount)
     ]
-    components = [
+    components = (
         occurrence.component
         for entity in entities
         if isinstance(occurrence := entity, adsk.fusion.Occurrence)
-    ]
+    )
 
     for component in components:
         remove_reports(component, selected_templates)
