@@ -6,7 +6,9 @@ programmer by trade, and any input is greatly appreciated!
 
 ## Commands ##
 * **Add Image:** Take a screenshot at the current view to associate with any 
-  selected body.
+  selected body or component (Components are intended to represent complex 
+  products and/or assemblies in this context. This can be a way of 
+  separating "parts" from "products")
 * **Add Image Batch:** Produce a set of images associated with bodies under
   unique part id's
 * **Edit Project Data:** Include custom variables in an associated JSON that 
