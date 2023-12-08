@@ -6,6 +6,7 @@ server_ip = '127.0.0.1'
 local_user = os.path.expanduser("~")
 config_file = os.path.abspath(__file__)
 config_dir = os.path.dirname(os.path.realpath(__file__))
+native_resources = os.path.join(config_dir, 'fusion360utils', 'nativeResources')
 
 home_page_dir = os.path.join(config_dir, 'Home Page')
 home_page = os.path.join(home_page_dir, 'index.html')

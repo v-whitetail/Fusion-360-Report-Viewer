@@ -1,6 +1,8 @@
 import adsk.core, adsk.fusion, adsk.cam
+import os
 from ... import config
 from ...lib.report_viewer_utils import *
+from ...lib.config import native_resources
 
 PALETTE_ID = config.sample_palette_id
 
@@ -64,10 +66,26 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
 
     inputs = args.command.commandInputs
+    selection_type = inputs.addDropDownCommandInput(
+        'image_add_input_type',
+        'Image Object',
+        adsk.core.DropDownStyles.LabeledIconDropDownStyle
+    )
+    selection_types = selection_type.listItems
+    selection_types.add(
+        'Body',
+        True,
+        os.path.join(native_resources, 'body')
+    )
+    selection_types.add(
+        'Component',
+        False,
+        os.path.join(native_resources, 'component')
+    )
     selection = inputs.addSelectionInput(
-        f'image_add_input_body',
-        f'Selection',
-        f'Select a Body to Add an Image to',
+        'image_add_input_body',
+        'Selection',
+        'Select a Body to Add an Image to',
     )
     selection.setSelectionLimits(1,1)
     selection.clearSelectionFilter()
