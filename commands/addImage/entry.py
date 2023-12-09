@@ -83,30 +83,41 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
         os.path.join(native_resources, 'component')
     )
     selection = inputs.addSelectionInput(
-        'image_add_input_body',
+        'image_add_input_item',
         'Selection',
         'Select a Body to Add an Image to',
     )
     selection.setSelectionLimits(1,1)
     selection.clearSelectionFilter()
     selection.addSelectionFilter(adsk.core.SelectionCommandInput.Bodies)
+    fit_viewport = inputs.addBoolValueInput(
+        'image_add_viewport_fit',
+        'Fit Viewport',
+        True,
+        '',
+        True
+    )
 
 def command_execute(args: adsk.core.CommandEventArgs):
 
     futil.log(f'{CMD_NAME} Command Execute Event')
     inputs = args.command.commandInputs
 
-    selection_input = inputs.itemById(f'image_add_input_body')
+    selection_input = inputs.itemById('image_add_input_item')
+    fit_viewport_input = inputs.itemById('image_add_viewport_fit')
 
-    if ((body := selection_input.selection(0).entity)
-            and isinstance(body, adsk.fusion.BRepBody)):
+    if (
+            (part := selection_input.selection(0).entity)
+            and isinstance(part, (adsk.fusion.BRepBody, adsk.fusion.Occurrence))
+    ):
         file_name = os.path.join(
             screenshot_dir,
-            f'user-{part_id(body)}.png'
+            f'user-{part_id(part)}.png'
         )
         viewport = adsk.core.Application.get().activeViewport
-        viewport.fit()
-        get_ui().activeSelections.removeByEntity(body)
+        if fit_viewport_input.value:
+            viewport.fit()
+        get_ui().activeSelections.removeByEntity(part)
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
 
 def command_preview(args: adsk.core.CommandEventArgs):
@@ -115,6 +126,18 @@ def command_preview(args: adsk.core.CommandEventArgs):
 def command_input_changed(args: adsk.core.InputChangedEventArgs):
     changed_input = args.input
     futil.log(f'{CMD_NAME} Input Changed Event fired from a change to {changed_input.id}')
+    if changed_input.id == 'image_add_input_type':
+        selection_type = args.inputs.itemById('image_add_input_type').selectedItem.name
+        selection = args.inputs.itemById('image_add_input_item')
+        if selection_type == 'Body':
+            selection.clearSelection()
+            selection.clearSelectionFilter()
+            selection.addSelectionFilter(adsk.core.SelectionCommandInput.Bodies)
+        if selection_type == 'Component':
+            selection.clearSelection()
+            selection.clearSelectionFilter()
+            selection.addSelectionFilter(adsk.core.SelectionCommandInput.Occurrences)
+
 
 def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
     futil.log(f'{CMD_NAME} Validate Input Event')

@@ -45,11 +45,22 @@ def save_image_options(filename: str):
     screenshot.isBackgroundTransparent = screenshot_transparency
     return screenshot
 
-def part_id(body: adsk.fusion.BRepBody):
+def part_id(part: adsk.fusion.BRepBody | adsk.fusion.Occurrence):
+    if isinstance(part, adsk.fusion.BRepBody):
+        return body_id(part)
+    if isinstance(part, adsk.fusion.Occurrence):
+        return occurrence_id(part)
+
+def body_id(body: adsk.fusion.BRepBody):
     body_name = body.name.encode()
     component_name = body.parentComponent.name.encode()
     document_name = body.parentComponent.parentDesign.parentDocument.name.encode()
     return f'{(zlib.crc32(body_name + component_name + document_name) & 0xffffffff):08x}'
+
+def occurrence_id(occurrence: adsk.fusion.Occurrence):
+    occurrence_name = occurrence.fullPathName.encode()
+    document_name = occurrence.component.parentDesign.parentDocument.name.encode()
+    return f'{(zlib.crc32(occurrence_name + document_name) & 0xffffffff):08x}'
 
 def empty_temp_files():
     for file in os.listdir(screenshot_dir):
