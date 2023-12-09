@@ -91,6 +91,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
         selected_template.name
         for template in list_all_templates()
         if (selected_template := inputs.itemById(f'{template}_input'))
+           and selected_template.value
     ]
 
     selection_input: adsk.core.SelectionCommandInput = inputs.itemById(f'process_add_input')
