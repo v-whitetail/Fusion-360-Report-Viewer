@@ -79,19 +79,23 @@ def command_execute(args: adsk.core.CommandEventArgs):
     design = adsk.fusion.Design.cast(get_product())
     orphaned_attributes = [
         attribute
-        for template in list_all_templates()
         for component in design.allComponents
         for attribute in component.attributes
-        if not any(template) == attribute.name
+        if not any(
+            template == attribute.name
+            for template in list_all_templates()
+        )
     ]
     details = [
         (
-            f'{item.name}::{attribute.groupName}::{attribute.name}::{attribute.value}//'
+            f'{item.name}::{attribute.groupName}::{attribute.name}::{attribute.value}'
         )
         for attribute in orphaned_attributes
         if isinstance(item := attribute.parent, (adsk.fusion.Component, adsk.fusion.BRepBody))
     ]
     get_ui().messageBox(f'Removed Content:\n\n{details}')
+    for attribute in orphaned_attributes:
+        attribute.deleteMe()
 
 def command_preview(args: adsk.core.CommandEventArgs):
     futil.log(f'{CMD_NAME} Command Preview Event')

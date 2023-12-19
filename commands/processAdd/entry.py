@@ -1,6 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
 from ... import config
-from ...lib import fusion360utils as futil
 from ...lib.report_viewer_utils import *
 
 PALETTE_ID = config.sample_palette_id

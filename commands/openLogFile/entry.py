@@ -70,7 +70,7 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
         with open(logger, 'w+') as file:
             file.write('')
 
-    subprocess.run(['start', logger], shell=True, check=True)
+    os.startfile(logger)
 
     futil.add_handler(args.command.execute, command_execute, local_handlers=local_handlers)
     futil.add_handler(args.command.destroy, command_destroy, local_handlers=local_handlers)
