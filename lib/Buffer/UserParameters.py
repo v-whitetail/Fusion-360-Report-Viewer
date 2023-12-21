@@ -6,6 +6,7 @@ def get(design: adsk.fusion.Design):
         parameter.name: parameter.comment
         for parameter in design.userParameters
         if parameter.comment is not None
+           and parameter.unit == 'No Units'
     }
 
     return buffer
