@@ -1,5 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
-from ..report_viewer_utils import part_id
+from ..report_viewer_utils import part_id, get_ui, list_all_templates
 
 def get(design: adsk.fusion.Design):
     
@@ -56,9 +56,31 @@ def get_report_groups(component: adsk.fusion.Component):
         if attribute.groupName == 'Report Group'
     ]
 
+def listed_report_groups(design: adsk.fusion.Design):
+    return list(
+        set([
+            report
+            for component in design.allComponents
+            for report in get_report_groups(component)
+        ])
+    )
 def format_units(design: adsk.fusion.Design, measurement: float):
     return design.unitsManager.formatInternalValue(
         measurement,
         'in',
         False
     )
+
+def check_report_groups(design: adsk.fusion.Design):
+    listed_reports = listed_report_groups(design)
+    available_templates = list_all_templates()
+    unavailable_templates = [
+        report
+        for report in listed_reports
+        if report not in available_templates
+    ]
+    if 0 < len(unavailable_templates):
+        get_ui().messageBox(
+            f'This design contains some report group(s) with no corresponding template.\n'
+            f'{unavailable_templates} will (all) be ignored.'
+        )

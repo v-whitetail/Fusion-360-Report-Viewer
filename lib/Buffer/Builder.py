@@ -13,4 +13,6 @@ def build():
         'partdata': PartData.get(design),
     }
 
+    PartData.check_report_groups(design)
+
     return json.dumps(buffer, indent=True)
