@@ -112,7 +112,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
     ):
         file_name = os.path.join(
             screenshot_dir,
-            f'user-{part_id(part)}.png'
+            f'user-{id_part(part)}.png'
         )
         viewport = adsk.core.Application.get().activeViewport
         if fit_viewport_input.value:

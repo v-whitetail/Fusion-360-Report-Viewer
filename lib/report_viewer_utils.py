@@ -45,7 +45,7 @@ def save_image_options(filename: str):
     screenshot.isBackgroundTransparent = screenshot_transparency
     return screenshot
 
-def part_id(part: adsk.fusion.BRepBody | adsk.fusion.Occurrence):
+def id_part(part: adsk.fusion.BRepBody | adsk.fusion.Occurrence):
     if isinstance(part, adsk.fusion.BRepBody):
         return body_id(part)
     if isinstance(part, adsk.fusion.Occurrence):
@@ -73,3 +73,22 @@ def get_project_data(document: adsk.core.Document):
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
     return os.path.join(project_data_dir, f'{project_folder.name}.json')
+
+def get_size(body: adsk.fusion.BRepBody):
+    bounding_box = body.boundingBox
+    min_point, max_point = bounding_box.minPoint, bounding_box.maxPoint
+    return sorted(min_point.vectorTo(max_point).asArray())
+
+def format_units(design: adsk.fusion.Design, measurement: float):
+    return design.unitsManager.formatInternalValue(
+        measurement,
+        'in',
+        False
+    )
+
+def get_report_groups(component: adsk.fusion.Component):
+    return [
+        attribute.name
+        for attribute in component.attributes
+        if attribute.groupName == 'Report Group'
+    ]

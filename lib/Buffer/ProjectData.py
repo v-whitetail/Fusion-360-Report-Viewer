@@ -1,5 +1,6 @@
 import adsk.core, adsk.fusion, adsk.cam
 import os, json
+from Builder import Buffer, BufferKey, BufferValue, BufferItem
 from ..config import project_data_dir
 from ..report_viewer_utils import get_ui, get_project_data
 from .. import fusion360utils as futil
@@ -9,13 +10,14 @@ def get(document: adsk.core.Document):
     scope_folder = document.dataFile.parentFolder
     project_folder = scope_folder.parentFolder
 
-    buffer = {
-        'proj': project_folder.name,
-        'scop': scope_folder.name,
-        'auth': document.dataFile.createdBy.displayName,
-        'vers': (version := document.dataFile.versionNumber),
-        'file': document.name.removesuffix(f'v{version}'),
-    }
+    project_data_key = BufferKey('projedata')
+    project_data_value = BufferValue([
+        BufferItem(BufferKey('proj'), BufferValue(project_folder.name)),
+        BufferItem(BufferKey('scop'), BufferValue(scope_folder.name)),
+        BufferItem(BufferKey('auth'), BufferValue(document.dataFile.createdBy.displayName)),
+        BufferItem(BufferKey('vers'), BufferValue(version := str(document.dataFile.versionNumber))),
+        BufferItem(BufferKey('file'), BufferValue(document.name.removesuffix(f'v{version}'))),
+    ])
 
     try:
         with open(os.path.abspath(get_project_data(document)), 'r') as file:

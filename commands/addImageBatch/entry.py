@@ -116,7 +116,7 @@ def command_execute(args: adsk.core.CommandEventArgs):
             for occurrence in occurrences[1:]:
                 occurrence.isLightBulbOn = False
         body.isVisible = True
-        file_name = os.path.join(screenshot_dir, f'{part_id(body)}.png')
+        file_name = os.path.join(screenshot_dir, f'{id_part(body)}.png')
         viewport.fit()
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
         body.isVisible = False
