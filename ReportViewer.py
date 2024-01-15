@@ -1,8 +1,10 @@
+import subprocess
+
 import adsk.core, adsk.fusion, adsk.cam
 from . import commands
 from .lib import live_server
 from .lib import fusion360utils as futil
-from .lib.config import logger
+from .lib.config import logger, html_exe, home_page_dir
 from .lib.Buffer import Builder
 from .lib.report_viewer_utils import empty_temp_files
 
@@ -45,5 +47,21 @@ class DocumentSavedHandler(adsk.core.DocumentEventHandler):
     def notify(self, args):
         if update_reports:
             buffer = Builder.build()
+
+            parser = subprocess.Popen(
+                [html_exe, home_page_dir],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                creationflags = subprocess.CREATE_NO_WINDOW,
+            )
+            stdout, stderr = parser.communicate(input=buffer)
+
             with open(logger, 'a+') as log:
+                log.write(f'\n[buffer]\n')
                 log.write(buffer)
+                log.write(f'\n[stdout]\n')
+                log.write(format(stdout))
+                log.write(f'\n[stderr]\n')
+                log.write(format(stderr))
+                log.write(f'\n[end]\n')

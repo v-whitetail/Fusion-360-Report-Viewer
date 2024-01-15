@@ -17,6 +17,7 @@ resources_dir = os.path.join(home_page_dir, 'Resources')
 project_data_dir = os.path.join(home_page_dir, 'Project Data')
 
 server_exe = os.path.join(home_page_dir, 'tcp-localhost.exe')
+html_exe = os.path.join(home_page_dir, 'html-nomicon.exe')
 
 screenshot_size = 256, 256
 screenshot_anti_alias = True
