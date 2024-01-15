@@ -16,7 +16,7 @@ templates_dir = os.path.join(home_page_dir, 'Templates')
 resources_dir = os.path.join(home_page_dir, 'Resources')
 project_data_dir = os.path.join(home_page_dir, 'Project Data')
 
-server_exe = os.path.join(home_page_dir, 'tcp_localhost.exe')
+server_exe = os.path.join(home_page_dir, 'tcp-localhost.exe')
 
 screenshot_size = 256, 256
 screenshot_anti_alias = True

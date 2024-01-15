@@ -4,15 +4,15 @@ from ..report_viewer_utils import part_id, get_ui, list_all_templates
 def get(design: adsk.fusion.Design):
     
     variables_in_buffer = [
-        "bod",
-        "com",
-        "mat",
-        "app",
-        "thi",
-        "wid",
-        "len",
-        "des",
-        "rep",
+        "~bod",
+        "~com",
+        "~mat",
+        "~app",
+        "~thi",
+        "~wid",
+        "~len",
+        "~des",
+        "~rep",
     ]
 
     buffer = {'headers': variables_in_buffer}
@@ -23,6 +23,8 @@ def get(design: adsk.fusion.Design):
         for body in occurrence.bRepBodies
         if body.isVisible and occurrence.isLightBulbOn
     ]
+
+    parts = {}
 
     for body in visible_bodies:
 
@@ -40,7 +42,9 @@ def get(design: adsk.fusion.Design):
             get_report_groups(body.parentComponent),
         ]
 
-        buffer[f'{part_id(body)}'] = variables
+        parts[f'{part_id(body)}'] = variables
+
+    buffer['parts'] = parts
 
     return buffer
 

@@ -37,7 +37,7 @@ def start():
 
 def stop():
     global tcp_thread
-    process_name = 'tcp_localhost.exe'
+    process_name = 'tcp-localhost.exe'
 
     try:
         tasks = subprocess.check_output(

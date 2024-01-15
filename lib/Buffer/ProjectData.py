@@ -10,11 +10,11 @@ def get(document: adsk.core.Document):
     project_folder = scope_folder.parentFolder
 
     buffer = {
-        'proj': project_folder.name,
-        'scop': scope_folder.name,
-        'auth': document.dataFile.createdBy.displayName,
-        'vers': (version := document.dataFile.versionNumber),
-        'file': document.name.removesuffix(f'v{version}'),
+        '~proj': project_folder.name,
+        '~scop': scope_folder.name,
+        '~auth': document.dataFile.createdBy.displayName,
+        '~vers': (version := document.dataFile.versionNumber),
+        '~file': document.name.removesuffix(f'v{version}'),
     }
 
     try:
