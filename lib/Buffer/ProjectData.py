@@ -7,13 +7,14 @@ from .. import fusion360utils as futil
 def get(document: adsk.core.Document):
     
     scope_folder = document.dataFile.parentFolder
-    project_folder = scope_folder.parentFolder
+    project_number, project_name = separate_by_delimiter(scope_folder.parentFolder.name, '-')
 
     buffer = {
-        '~proj': project_folder.name,
+        '~proj': project_name,
+        '~numb': project_number,
         '~scop': scope_folder.name,
         '~auth': document.dataFile.createdBy.displayName,
-        '~vers': (version := document.dataFile.versionNumber),
+        '~vers': format(version := document.dataFile.versionNumber),
         '~file': document.name.removesuffix(f'v{version}'),
     }
 
@@ -26,3 +27,10 @@ def get(document: adsk.core.Document):
         get_ui().commandDefinitions.itemById('inputProjectData').execute()
 
     return buffer
+
+def separate_by_delimiter(folder_name: str, delimiter: str):
+    if delimiter in folder_name:
+        number, name = folder_name.split(delimiter, 1)
+        return str(number).strip(), str(name).strip()
+    else:
+        return folder_name, folder_name

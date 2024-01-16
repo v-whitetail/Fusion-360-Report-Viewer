@@ -50,6 +50,7 @@ class DocumentSavedHandler(adsk.core.DocumentEventHandler):
 
             parser = subprocess.Popen(
                 [html_exe, home_page_dir],
+                text=True,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
