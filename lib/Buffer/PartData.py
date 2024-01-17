@@ -1,4 +1,5 @@
 import adsk.core, adsk.fusion, adsk.cam
+from math import floor
 from ..report_viewer_utils import part_id, get_ui, list_all_templates
 
 def get(design: adsk.fusion.Design):
@@ -69,10 +70,28 @@ def listed_report_groups(design: adsk.fusion.Design):
         ])
     )
 def format_units(design: adsk.fusion.Design, measurement: float):
-    return design.unitsManager.formatInternalValue(
+    value_as_str = design.unitsManager.formatInternalValue(
         measurement,
         'in',
         False
+    )
+    numerator, denominator = get_best_approximate(value_as_str)
+    prefix_int = floor(numerator / denominator)
+    if prefix_int <= 0:
+        return f'{numerator}/{denominator}'
+    numerator -= denominator * prefix_int
+    if numerator == 0:
+        return f'{prefix_int}'
+    return f'{prefix_int} {numerator}/{denominator}'
+
+def get_best_approximate(value: str):
+    value_float = float(value)
+    return  min(
+        (
+            (round(value_float * denominator), denominator)
+            for denominator in [2, 4, 8, 16]
+        ),
+        key=lambda f: abs(value_float - f[0]/f[1])
     )
 
 def check_report_groups(design: adsk.fusion.Design):
