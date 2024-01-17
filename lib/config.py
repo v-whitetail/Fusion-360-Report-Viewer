@@ -37,5 +37,5 @@ logger = os.path.join(
 )
 
 project_data_variables = {
-    'addy': 'Project Address',
+    'ADDY': 'Project Address',
 }

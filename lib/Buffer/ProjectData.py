@@ -10,12 +10,12 @@ def get(document: adsk.core.Document):
     project_number, project_name = separate_by_delimiter(scope_folder.parentFolder.name, '-')
 
     buffer = {
-        '~proj': project_name,
-        '~numb': project_number,
-        '~scop': scope_folder.name,
-        '~auth': document.dataFile.createdBy.displayName,
-        '~vers': format(version := document.dataFile.versionNumber),
-        '~file': document.name.removesuffix(f'v{version}'),
+        'PROJ': project_name,
+        'NUMB': project_number,
+        'SCOP': scope_folder.name,
+        'AUTH': document.dataFile.createdBy.displayName,
+        'VERS': format(version := document.dataFile.versionNumber),
+        'FILE': document.name.removesuffix(f'v{version}'),
     }
 
     try:
@@ -33,4 +33,4 @@ def separate_by_delimiter(folder_name: str, delimiter: str):
         number, name = folder_name.split(delimiter, 1)
         return str(number).strip(), str(name).strip()
     else:
-        return folder_name, folder_name
+        return '', folder_name

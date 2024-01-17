@@ -42,7 +42,7 @@ def get(design: adsk.fusion.Design):
             get_report_groups(body.parentComponent),
         ]
 
-        parts[f'{part_id(body)}'] = variables
+        parts[f'{t:.2}{w:.2}{l:.2}{part_id(body)}'] = variables
 
     buffer['parts'] = parts
 
