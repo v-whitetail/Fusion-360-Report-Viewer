@@ -1,6 +1,6 @@
 import adsk.core, adsk.fusion, adsk.cam
 
-from .addImage import entry as addImage
+#from .addImage import entry as addImage
 from .addImageBatch import entry as addImageBatch
 from .startServer import entry as startServer
 from .stopServer import entry as stopServer
@@ -27,8 +27,7 @@ commands = [
     openHomeFolder,
     openLogFile,
     inputProjectData,
-    addImageBatch,
-    addImage,
+    addImageBatch, #    addImage,
     emptyTempFiles,
 ]
 

@@ -5,7 +5,7 @@ from ..report_viewer_utils import part_id, get_ui, list_all_templates
 def get(design: adsk.fusion.Design):
     
     variables_in_buffer = [
-        "~bod",
+        "~occ",
         "~com",
         "~mat",
         "~app",
@@ -18,43 +18,42 @@ def get(design: adsk.fusion.Design):
 
     buffer = {'headers': variables_in_buffer}
 
-    visible_bodies = [
-        body
-        for occurrence in design.rootComponent.allOccurrences
-        for body in occurrence.bRepBodies
-        if body.isVisible and occurrence.isLightBulbOn
-    ]
-
     parts = {}
 
-    for body in visible_bodies:
+    for occurrence in design.rootComponent.allOccurrences:
 
-        t, w, l = get_size(body)
+        t, w, l = get_size(occurrence)
 
         variables = [
-            body.name,
-            body.parentComponent.name,
-            body.material.name,
-            body.appearance.name,
+            occurrence.name,
+            occurrence.component.name,
+            occurrence.component.material.name,
+            occurrence.component.material.appearance.name,
             format_units(design, t),
             format_units(design, w),
             format_units(design, l),
-            body.parentComponent.description,
-            get_report_groups(body.parentComponent),
+            occurrence.component.description,
+            get_report_groups(occurrence.component),
         ]
 
-        parts[f'{part_id(body)}'] = variables
+        parts[f'{part_id(occurrence)}'] = variables
 
     buffer['parts'] = parts
 
     return buffer
 
-def get_size(body: adsk.fusion.BRepBody):
-    bounding_box = body.boundingBox
+def get_size(entity: adsk.fusion.BRepBody | adsk.fusion.Occurrence | adsk.fusion.Component):
+    bounding_box = entity.boundingBox
     min_point, max_point = bounding_box.minPoint, bounding_box.maxPoint
     return sorted(min_point.vectorTo(max_point).asArray())
 
-def get_report_groups(component: adsk.fusion.Component):
+def get_report_groups(entity: adsk.fusion.Component | adsk.fusion.Occurrence | adsk.fusion.BRepBody):
+    if isinstance(entity, adsk.fusion.Occurrence):
+        component = entity.component
+    elif isinstance(entity, adsk.fusion.BRepBody):
+        component = entity.parentComponent
+    else:
+        component = entity
     return [
         attribute.name
         for attribute in component.attributes
