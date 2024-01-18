@@ -86,47 +86,21 @@ def command_execute(args: adsk.core.CommandEventArgs):
 
     design = adsk.fusion.Design.cast(get_product())
 
-    all_bodies = [
-        body
-        for component in design.allComponents
-        for body in component.bRepBodies
-    ]
-
-    selected_bodies = [
-        body
-        for component in design.allComponents
+    selected_occurrences = [
+        occurrence
+        for occurrence in design.rootComponent.allOccurrences
         for template in selected_templates
-        for body in component.bRepBodies
-        if component.attributes.itemByName(f'Report Group', template)
+        if occurrence.component.attributes.itemByName(f'Report Group', template)
     ]
 
     viewport = adsk.core.Application.get().activeViewport
 
-    for body in all_bodies:
-        body.isVisible = False
-
-    for body in selected_bodies:
-        occurrences = [
-            occurrence
-            for occurrence
-            in design.rootComponent.allOccurrencesByComponent(body.parentComponent)
-        ]
-        if 1 < len(occurrences):
-            occurrences[0].isLightBulbOn = True
-            for occurrence in occurrences[1:]:
-                occurrence.isLightBulbOn = False
-        body.isVisible = True
-        file_name = os.path.join(screenshot_dir, f'{part_id(body)}.png')
+    for occurrence in selected_occurrences:
+        occurrence.isIsolated = True
+        file_name = os.path.join(screenshot_dir, f'{part_id(occurrence)}.png')
         viewport.fit()
         viewport.saveAsImageFileWithOptions(save_image_options(file_name))
-        body.isVisible = False
-        for occurrence in occurrences:
-            occurrence.isLightBulbOn = True
-
-    for body in all_bodies:
-        body.isVisible = True
-    for occurrence in design.rootComponent.allOccurrences:
-        occurrence.isLightBulgOn = True
+        occurrence.isIsolated = False
 
 
 def command_preview(args: adsk.core.CommandEventArgs):
